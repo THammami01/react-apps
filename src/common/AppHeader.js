@@ -12,11 +12,14 @@ import {
 import {
   removeAccessToken,
   removeConnectedUser,
+  setTheme,
 } from "../store/actions/action-creators";
+import { getFirstNChars } from "../utils/functions";
 
 const AppHeader = () => {
   const history = useHistory();
   const connectedUser = useSelector((state) => state.global.connectedUser);
+  const theme = useSelector((state) => state.global.theme);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -27,6 +30,14 @@ const AppHeader = () => {
   };
 
   const tooltip = <Tooltip>Se déconnecter</Tooltip>;
+
+  const switchTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    localStorage.setItem("theme", newTheme);
+
+    dispatch(setTheme(newTheme));
+    window.location.reload(false);
+  };
 
   return (
     <Header>
@@ -52,28 +63,38 @@ const AppHeader = () => {
             alt="Délice"
             className="navbar-logo"
             onClick={() => {
-              history.push("/");
+              // history.push("/");
             }}
           />
 
-          {connectedUser && (
-            <ButtonToolbar style={{ padding: ".75rem 1rem" }}>
-              <Whisper
-                placement="autoVerticalEnd"
-                trigger="hover"
-                speaker={tooltip}
-              >
-                <IconButton
-                  appearance="primary"
-                  icon={<Icon icon="sign-out" />}
-                  placement="right"
-                  onClick={handleLogout}
+          <div
+            style={{ padding: ".75rem 1rem", display: "flex", gap: ".25rem" }}
+          >
+            <IconButton
+              icon={<Icon icon={theme === "light" ? "moon-o" : "sun-o"} />}
+              appearance="primary"
+              onClick={switchTheme}
+            />
+
+            {connectedUser && (
+              <ButtonToolbar>
+                <Whisper
+                  placement="autoVerticalEnd"
+                  trigger="hover"
+                  speaker={tooltip}
                 >
-                  {connectedUser.userId}
-                </IconButton>
-              </Whisper>
-            </ButtonToolbar>
-          )}
+                  <IconButton
+                    appearance="primary"
+                    icon={<Icon icon="sign-out" />}
+                    placement="right"
+                    onClick={handleLogout}
+                  >
+                    {getFirstNChars(connectedUser.userId, 10)}
+                  </IconButton>
+                </Whisper>
+              </ButtonToolbar>
+            )}
+          </div>
         </Navbar.Header>
       </Navbar>
     </Header>

@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
-import { Container } from "rsuite";
 import { Switch, Route, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import "./App.scss";
-
+import { Container } from "rsuite";
 import AppHeader from "./common/AppHeader";
 import AppFooter from "./common/AppFooter";
-import LoginForm from "./pages/LoginForm";
-import Page1 from "./pages/Page1";
-import Page2 from "./pages/Page2";
-import { setAccessToken } from "./store/actions/action-creators";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import "./App.scss";
+import { setAccessToken, setConnectedUser, setTheme } from "./store/actions/action-creators";
 
 const App = () => {
   const history = useHistory();
@@ -17,11 +16,15 @@ const App = () => {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
+    let theme = localStorage.getItem("theme");
+    dispatch(setTheme(theme));
+
     if (!accessToken) {
       history.push("/login");
     } else {
       dispatch(setAccessToken(accessToken));
-      history.push("/page1");
+      dispatch(setConnectedUser({userId: "Tarek Hammami"}));
+      history.push("/management/employees");
     }
   }, []); // eslint-disable-line
 
@@ -30,14 +33,14 @@ const App = () => {
       <Container>
         <AppHeader />
         <Switch>
-          <Route path="/login">
-            <LoginForm />
+          <Route exact path="/">
+            <Home />
           </Route>
-          <Route path="/page1">
-            <Page1 />
+          <Route exact path="/login">
+            <Login />
           </Route>
-          <Route path="/page2">
-            <Page2 />
+          <Route path="/management">
+            <Dashboard />
           </Route>
         </Switch>
         <AppFooter />

@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   ButtonToolbar,
   Content,
@@ -10,22 +12,15 @@ import {
   IconButton,
   Panel,
 } from "rsuite";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import {
+  setAccessToken,
   setConnectedUser,
 } from "../store/actions/action-creators";
-import { useHistory } from "react-router-dom";
 
-const LoginForm = () => {
-  const isLoading = useSelector((state) => state.loading);
+const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const [user, setUser] = useState({ userId: "", userPwd: "" });
-
-  useEffect(() => {
-    // dispatch(startLoading());
-  }, []); // eslint-disable-line
+  const [user, setUser] = useState({ userId: "Tarek Hammami", userPwd: "" });
 
   const handleFormChange = (k, v) => {
     setUser({ ...user, [k]: v });
@@ -33,7 +28,9 @@ const LoginForm = () => {
 
   const handleLogin = () => {
     dispatch(setConnectedUser(user));
-    history.push("/page1");
+    dispatch(setAccessToken("..."));
+    localStorage.setItem("accessToken", "...");
+    history.push("/management");
   };
 
   return (
@@ -73,10 +70,8 @@ const LoginForm = () => {
           </Form>
         </Panel>
       </Content>
-
-      <h3>{isLoading}</h3>
     </div>
   );
 };
 
-export default LoginForm;
+export default Login;

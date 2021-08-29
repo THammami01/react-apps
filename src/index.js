@@ -6,8 +6,19 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store";
 import { BrowserRouter as Router } from "react-router-dom";
-import "rsuite/dist/styles/rsuite-default.css";
-// import "rsuite/dist/styles/rsuite-dark.css";
+
+let theme = localStorage.getItem("theme");
+
+if (!theme) {
+  theme = "light";
+  localStorage.setItem("theme", theme);
+}
+
+if (theme === "light") {
+  import("rsuite/dist/styles/rsuite-default.css");
+} else {
+  import("rsuite/dist/styles/rsuite-dark.css");
+}
 
 ReactDOM.render(
   <React.StrictMode>

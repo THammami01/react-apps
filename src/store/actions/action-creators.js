@@ -41,3 +41,10 @@ export const removeConnectedUser = (payload) => {
     payload: payload,
   };
 };
+
+export const setTheme = (payload) => {
+  return {
+    type: _.SET_THEME,
+    payload: payload,
+  };
+};

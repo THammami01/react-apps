@@ -3,6 +3,7 @@ import * as _ from "../actions/action-types";
 const initialState = {
   accessToken: "",
   connectedUser: null,
+  theme: "light",
 };
 
 const globalReducer = (state = initialState, action) => {
@@ -25,6 +26,9 @@ const globalReducer = (state = initialState, action) => {
 
     case _.REMOVE_CONNECTED_USER:
       return { ...state, connectedUser: null };
+
+    case _.SET_THEME:
+      return { ...state, theme: payload };
 
     default:
       return state;

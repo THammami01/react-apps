@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-const Page1 = () => {
+const Home = () => {
   const connectedUser = useSelector((store) => store.global.connectedUser);
   const history = useHistory();
 
@@ -10,12 +10,7 @@ const Page1 = () => {
     if (!connectedUser) history.push("/login");
   }, []); // eslint-disable-line
 
-  return (
-    <>
-      <h1>Page 1..</h1>
-      <p>CONNECTED USER: {JSON.stringify(connectedUser)}</p>
-    </>
-  );
+  return <></>;
 };
 
-export default Page1;
+export default Home;
