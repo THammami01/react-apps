@@ -1,0 +1,15 @@
+.navbar-logo {
+  height: 100%;
+  padding: .75rem 1rem;
+}
+
+.center-content {
+  display: flex;
+  min-height: calc(100vh - 90px - 16px);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
