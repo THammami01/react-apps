@@ -3,3 +3,13 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+body {
+  background-color: blue;
+  user-select: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

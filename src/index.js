@@ -3,12 +3,19 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
+import store from "./store";
+import { BrowserRouter as Router } from "react-router-dom";
 import "rsuite/dist/styles/rsuite-default.css";
 // import "rsuite/dist/styles/rsuite-dark.css";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
