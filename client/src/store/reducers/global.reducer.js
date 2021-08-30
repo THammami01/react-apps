@@ -19,9 +19,7 @@ const globalReducer = (state = initialState, action) => {
     case _.SET_CONNECTED_USER:
       return {
         ...state,
-        connectedUser: {
-          userId: payload.userId,
-        },
+        connectedUser: payload,
       };
 
     case _.REMOVE_CONNECTED_USER:

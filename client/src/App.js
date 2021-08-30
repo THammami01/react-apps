@@ -2,13 +2,18 @@ import React, { useEffect } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Container } from "rsuite";
+import {
+  setAccessToken,
+  setConnectedUser,
+  setTheme,
+} from "./store/actions/action-creators";
+
 import AppHeader from "./common/AppHeader";
 import AppFooter from "./common/AppFooter";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import "./App.scss";
-import { setAccessToken, setConnectedUser, setTheme } from "./store/actions/action-creators";
 
 const App = () => {
   const history = useHistory();
@@ -23,7 +28,14 @@ const App = () => {
       history.push("/login");
     } else {
       dispatch(setAccessToken(accessToken));
-      dispatch(setConnectedUser({userId: "Tarek Hammami"}));
+      dispatch(
+        setConnectedUser({
+          firstname: "Tarek",
+          lastname: "Hammami",
+          level: "Admin",
+          id: "0001",
+        })
+      );
       history.push("/management/employees");
     }
   }, []); // eslint-disable-line

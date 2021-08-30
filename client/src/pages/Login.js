@@ -27,7 +27,7 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    dispatch(setConnectedUser(user));
+    dispatch(setConnectedUser({ ...user, firstname: "Tarek", lastname: "Hammami", level: "Admin", id: "0001" }));
     dispatch(setAccessToken("..."));
     localStorage.setItem("accessToken", "...");
     history.push("/management");

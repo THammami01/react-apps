@@ -1,10 +1,20 @@
 {
   "files.exclude": {
-    "public": true,
+    "client/public": true,
+    "client/node_modules": true,
+    "client/src/reportWebVitals.js": true,
+    "client/src/setupTests.js": true,
+    "client/package-lock.json": true,
+    "client/package.json": true,
+    
     "node_modules": true,
-    "src/reportWebVitals.js": true,
-    "src/setupTests.js": true,
+    "modals": true,
     "package-lock.json": true,
+    "package.json": true,
     ".gitignore": true,
+    ".env": true,
+    "db.js": true,
+    "index.js": true,
+    "README.md": true,
   }
 }

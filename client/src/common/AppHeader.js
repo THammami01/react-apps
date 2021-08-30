@@ -59,7 +59,7 @@ const AppHeader = () => {
           }}
         >
           <img
-            src="assets/imgs/delice.png"
+            src="/assets/imgs/delice.png"
             alt="Délice"
             className="navbar-logo"
             onClick={() => {
@@ -89,7 +89,7 @@ const AppHeader = () => {
                     placement="right"
                     onClick={handleLogout}
                   >
-                    {getFirstNChars(connectedUser.userId, 10)}
+                    {getFirstNChars(`${connectedUser.lastname} ${connectedUser.firstname}`, 20)}
                   </IconButton>
                 </Whisper>
               </ButtonToolbar>
