@@ -21,7 +21,7 @@ const LeavesMng = () => {
         appearance: "primary",
         color: "green",
         onClick: () => {
-          acceptLeave(targetLeaveId);
+          updateLeave("Acceptée", targetLeaveId);
           setIsAcceptModalShown(false);
         },
       },
@@ -43,7 +43,7 @@ const LeavesMng = () => {
         appearance: "primary",
         color: "red",
         onClick: () => {
-          refuseLeave(targetLeaveId);
+          updateLeave("Réfusée", targetLeaveId);
           setIsRefuseModalShown(false);
         },
       },
@@ -67,34 +67,27 @@ const LeavesMng = () => {
     setTargetLeaveId(_id);
   };
 
-  const acceptLeave = (targetId) => {
-    let leaveToUpdate;
-
-    setLeaves((leaves) =>
-      leaves.map((leave) => {
+  const updateLeave = (newStatus, targetId) => {
+    setLeaves((leaves) => {
+      let leaveToUpdate;
+      const newLeaves = leaves.map((leave) => {
         if (leave._id === targetId) {
-          leaveToUpdate = leave;
-          return { ...leave, status: "Acceptée" };
+          leaveToUpdate = { ...leave, status: newStatus };
+          return leaveToUpdate;
         } else return leave;
-      })
-    );
-
-    axios
-      .put(`${baseUrl}/leaves`, leaveToUpdate)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        Alert.error("Erreur lors de la connexion au serveur.");
       });
-  };
 
-  const refuseLeave = (targetId) => {
-    setLeaves((leaves) =>
-      leaves.map((leave) => {
-        return leave._id === targetId ? { ...leave, status: "Réfusée" } : leave;
-      })
-    );
+      axios
+        .put(`${baseUrl}/leaves`, leaveToUpdate)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          Alert.error("Erreur lors de la connexion au serveur.");
+        });
+
+      return newLeaves;
+    });
   };
 
   useEffect(() => {
@@ -120,7 +113,24 @@ const LeavesMng = () => {
       <h1 style={{ marginBottom: "2.5rem" }}>Gestion des Congés</h1>
 
       {leaves !== null ? (
-        <Table autoHeight wordWrap height={400} data={leaves}>
+        <Table
+          autoHeight
+          wordWrap
+          height={90}
+          data={leaves}
+          renderEmpty={() => (
+            <div
+              style={{
+                height: 45,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <p>Aucune demande trouvée.</p>
+            </div>
+          )}
+        >
           <Column width={100} align="center" fixed>
             <HeaderCell>Id employé</HeaderCell>
             <Cell dataKey="employeeId" />

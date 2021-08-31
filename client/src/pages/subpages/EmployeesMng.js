@@ -59,7 +59,10 @@ const EmployeesMng = () => {
         label: "Supprimer",
         appearance: "primary",
         color: "red",
-        onClick: () => setIsDeleteModalShown(false),
+        onClick: () => {
+          deleteEmployee(personToUpdate._id);
+          setIsDeleteModalShown(false);
+        },
       },
       {
         label: "Annuler",
@@ -89,6 +92,21 @@ const EmployeesMng = () => {
     };
   }, []);
 
+  const deleteEmployee = (targetPerson) => {
+    setUsers((users) => {
+      const newUsers = users.filter(({ _id }) => _id !== targetPerson);
+      axios
+        .put(`${baseUrl}/employees/delete`, { _id: targetPerson })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          Alert.error("Erreur lors de la connexion au serveur.");
+        });
+      return newUsers;
+    });
+  };
+
   const handleAction = (action, person) => {
     switch (action) {
       case "add":
@@ -100,6 +118,7 @@ const EmployeesMng = () => {
         break;
       case "delete":
         setIsDeleteModalShown(true);
+        setPersonToUpdate(person);
         break;
       default:
         break;
@@ -120,7 +139,24 @@ const EmployeesMng = () => {
       </Button>
 
       {users !== null ? (
-        <Table autoHeight wordWrap height={400} data={users}>
+        <Table
+          autoHeight
+          wordWrap
+          height={90}
+          data={users}
+          renderEmpty={() => (
+            <div
+              style={{
+                height: 45,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <p>Aucun employé trouvé.</p>
+            </div>
+          )}
+        >
           <Column width={100} align="center" fixed>
             <HeaderCell>Id</HeaderCell>
             <Cell dataKey="id" />
@@ -172,7 +208,7 @@ const EmployeesMng = () => {
                     </a>
                     <br />
                     <a
-                      onClick={() => handleAction("delete")}
+                      onClick={() => handleAction("delete", person)}
                       style={{ cursor: "pointer" }}
                     >
                       {" "}

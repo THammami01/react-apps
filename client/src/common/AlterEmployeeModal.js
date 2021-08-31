@@ -47,7 +47,7 @@ const AlterEmloyeeModal = ({
             trigger="focus"
             key={label}
             speaker={
-              <Tooltip style={{ visibility: formValues[id] ? "hidden" : "" }}>
+              <Tooltip style={{ visibility: value ? "hidden" : "" }}>
                 {"Obligatoire"}
               </Tooltip>
             }

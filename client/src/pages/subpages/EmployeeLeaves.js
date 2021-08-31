@@ -12,7 +12,7 @@ const { Column, HeaderCell, Cell } = Table;
 
 const EmployeesMng = () => {
   const connectedUser = useSelector((store) => store.global.connectedUser);
-  const [users, setUsers] = useState(null);
+  const [leaves, setLeaves] = useState(null);
   const [isAddModalShown, setIsAddModalShown] = useState(false);
   const [isUpdateModalShown, setIsUpdateModalShown] = useState(false);
   const [isDeleteModalShown, setIsDeleteModalShown] = useState(false);
@@ -56,13 +56,16 @@ const EmployeesMng = () => {
   };
 
   const deleteModalContent = {
-    text: "Êtes-vous sûr de vouloir supprimer cette demande de congé ?",
+    text: "Êtes-vous sûr de vouloir supprimer cette demande ?",
     btns: [
       {
         label: "Supprimer",
         appearance: "primary",
         color: "red",
-        onClick: () => setIsDeleteModalShown(false),
+        onClick: () => {
+          deleteLeave(leaveToUpdate._id);
+          setIsDeleteModalShown(false);
+        },
       },
       {
         label: "Annuler",
@@ -76,13 +79,13 @@ const EmployeesMng = () => {
 
   useEffect(() => {
     let timer;
-    console.log("BR1")
-    console.log(connectedUser)
+    console.log("BR1");
+    console.log(connectedUser);
     axios
       .get(`${baseUrl}/leaves/${connectedUser.id}`)
       .then((res) => {
         timer = setTimeout(() => {
-          setUsers(res.data.leaves);
+          setLeaves(res.data.leaves);
         }, 500);
       })
       .catch((err) => {
@@ -92,7 +95,7 @@ const EmployeesMng = () => {
     return () => {
       clearTimeout(timer);
     };
-  }, []);
+  }, []); // eslint-disable-line
 
   const handleAction = (action, leave) => {
     switch (action) {
@@ -105,10 +108,26 @@ const EmployeesMng = () => {
         break;
       case "delete":
         setIsDeleteModalShown(true);
+        setLeaveToUpdate(leave);
         break;
       default:
         break;
     }
+  };
+
+  const deleteLeave = (targetId) => {
+    setLeaves((leaves) => {
+      const newLeaves = leaves.filter(({ _id }) => _id !== targetId);
+      axios
+        .put(`${baseUrl}/leaves/delete`, { _id: targetId })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          Alert.error("Erreur lors de la connexion au serveur.");
+        });
+      return newLeaves;
+    });
   };
 
   return (
@@ -123,8 +142,25 @@ const EmployeesMng = () => {
         Ajouter un congé
       </Button>
 
-      {users !== null ? (
-        <Table autoHeight wordWrap height={400} data={users}>
+      {leaves !== null ? (
+        <Table
+          autoHeight
+          wordWrap
+          height={90}
+          data={leaves}
+          renderEmpty={() => (
+            <div
+              style={{
+                height: 45,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <p>Aucune demande trouvée.</p>
+            </div>
+          )}
+        >
           <Column width={200}>
             <HeaderCell>Date départ</HeaderCell>
             <Cell dataKey="departureDate" />
@@ -160,7 +196,7 @@ const EmployeesMng = () => {
                     </a>
                     <br />
                     <a
-                      onClick={() => handleAction("delete")}
+                      onClick={() => handleAction("delete", leave)}
                       style={{ cursor: "pointer" }}
                     >
                       {" "}

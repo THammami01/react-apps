@@ -40,4 +40,15 @@ router.get("/", async (req, res) => {
   res.send({ employees });
 });
 
+router.put("/delete", async (req, res) => {
+  const { _id } = req.body;
+
+  await Employee.findByIdAndRemove(_id, {}, (err, results) => {
+    if (err) {
+      console.log(err);
+      res.sendStatus(500);
+    } else res.send({ status: "Deleted" });
+  });
+});
+
 module.exports = router;

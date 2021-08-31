@@ -29,6 +29,10 @@ const Login = () => {
     setEmployee({ ...employee, [k]: v });
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") handleLogin();
+  };
+
   const handleLogin = () => {
     if (!employee.id || !employee.password) {
       Alert.info("Tous les champs doivent être remplis.", 5000);
@@ -63,6 +67,7 @@ const Login = () => {
                 name="name"
                 value={employee.id}
                 onChange={(v) => handleFormChange("id", v)}
+                onKeyDown={handleKeyDown}
               />
             </FormGroup>
             <FormGroup>
@@ -72,6 +77,7 @@ const Login = () => {
                 type="password"
                 value={employee.password}
                 onChange={(v) => handleFormChange("password", v)}
+                onKeyDown={handleKeyDown}
               />
             </FormGroup>
             <FormGroup>

@@ -16,7 +16,12 @@ const ConfirmationModal = ({ text, isShown, btns, onClose }) => {
       </Modal.Body>
       <Modal.Footer>
         {btns.map(({ label, appearance, color, onClick }, index) => (
-          <Button key={index} onClick={onClick} appearance={appearance} color={color}>
+          <Button
+            key={index}
+            onClick={onClick}
+            appearance={appearance}
+            color={color}
+          >
             {label}
           </Button>
         ))}
