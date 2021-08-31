@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Button, Modal, Whisper, Input, Tooltip } from "rsuite";
 
 const AlterEmloyeeModal = ({
@@ -10,8 +11,10 @@ const AlterEmloyeeModal = ({
 }) => {
   const [formValues, setFormValues] = useState([
     { id: "departureDate", label: "Date départ", width: 300, value: "" },
-    { id: "leaveDate", label: "Date retour", width: 300, value: "" },
+    { id: "returnDate", label: "Date retour", width: 300, value: "" },
   ]);
+
+  const connectedUser = useSelector((store) => store.global.connectedUser);
 
   useEffect(() => {
     if (leaveToUpdate)
@@ -22,6 +25,21 @@ const AlterEmloyeeModal = ({
         ];
       });
   }, []); // eslint-disable-line
+
+  const getLeave = () => {
+    const savedLeave = {
+      employeeId: connectedUser.id,
+      lastname: connectedUser.lastname,
+      firstname: connectedUser.firstname,
+      level: connectedUser.level,
+      status: "En cours de traitement",
+    };
+
+    formValues.forEach((formValue) => {
+      savedLeave[formValue.id] = formValue.value;
+    });
+    return savedLeave;
+  };
 
   return (
     <Modal
@@ -61,7 +79,11 @@ const AlterEmloyeeModal = ({
       </Modal.Body>
       <Modal.Footer>
         {btns.map(({ label, appearance, onClick }, index) => (
-          <Button key={index} onClick={onClick} appearance={appearance}>
+          <Button
+            key={index}
+            onClick={() => onClick(getLeave())}
+            appearance={appearance}
+          >
             {label}
           </Button>
         ))}

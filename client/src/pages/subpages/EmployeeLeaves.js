@@ -4,7 +4,7 @@ import { Alert, Button, Placeholder, Table, Tag } from "rsuite";
 import axios from "axios";
 
 import baseUrl from "../../utils/baseUrl";
-import { getStatusColor } from "../../utils/functions";
+import { getStatusColor, noFieldIsEmpty } from "../../utils/functions";
 import AlterLeaveModal from "../../common/AlterLeaveModal";
 import ConfirmationModal from "../../common/ConfirmationModal";
 
@@ -24,7 +24,14 @@ const EmployeesMng = () => {
       {
         label: "Ajouter",
         appearance: "primary",
-        onClick: () => setIsAddModalShown(false),
+        onClick: (savedLeave) => {
+          if (noFieldIsEmpty(savedLeave)) {
+            addLeave(savedLeave);
+            setIsAddModalShown(false);
+          } else {
+            Alert.info("Tous les champs doivent être remplis.", 5000);
+          }
+        },
       },
       {
         label: "Annuler",
@@ -42,7 +49,15 @@ const EmployeesMng = () => {
       {
         label: "Modifier",
         appearance: "primary",
-        onClick: () => setIsUpdateModalShown(false),
+        onClick: (savedLeave) => {
+          savedLeave._id = leaveToUpdate._id;
+          if (noFieldIsEmpty(savedLeave)) {
+            updateLeave(savedLeave);
+            setIsUpdateModalShown(false);
+          } else {
+            Alert.info("Tous les champs doivent être remplis.", 5000);
+          }
+        },
       },
       {
         label: "Annuler",
@@ -111,6 +126,33 @@ const EmployeesMng = () => {
       default:
         break;
     }
+  };
+
+  const addLeave = (savedLeave) => {
+    axios
+      .post(`${baseUrl}/leaves`, savedLeave)
+      .then((res) => {
+        Alert.success("Ajouté avec succès.", 5000);
+        setLeaves((leaves) => [...leaves, res.data]);
+      })
+      .catch((err) => {
+        Alert.error("Erreur lors de la connexion au serveur.");
+      });
+  };
+
+  const updateLeave = (savedLeave) => {
+    setLeaves((leaves) =>
+      leaves.map((leave) => (leave._id === savedLeave._id ? savedLeave : leave))
+    );
+
+    axios
+      .put(`${baseUrl}/leaves`, savedLeave)
+      .then((res) => {
+        Alert.success("Modifié avec succès.", 5000);
+      })
+      .catch((err) => {
+        Alert.error("Erreur lors de la connexion au serveur.");
+      });
   };
 
   const deleteLeave = (targetId) => {
@@ -185,14 +227,19 @@ const EmployeesMng = () => {
               {(leave) => {
                 return (
                   <span>
-                    <a
-                      onClick={() => handleAction("update", leave)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {" "}
-                      Modifier{" "}
-                    </a>
-                    <br />
+                    {leave.status === "En cours de traitement" && (
+                      <>
+                        <a
+                          onClick={() => handleAction("update", leave)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          {" "}
+                          Modifier{" "}
+                        </a>
+
+                        <br />
+                      </>
+                    )}
                     <a
                       onClick={() => handleAction("delete", leave)}
                       style={{ cursor: "pointer" }}

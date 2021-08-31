@@ -13,3 +13,7 @@ export const getStatusColor = (status) => {
       return "cyan";
   }
 };
+
+export const noFieldIsEmpty = (obj) => {
+  return Object.values(obj).every((value) => value !== "");
+};

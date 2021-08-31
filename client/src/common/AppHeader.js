@@ -8,6 +8,7 @@ import {
   IconButton,
   Whisper,
   Tooltip,
+  Alert,
 } from "rsuite";
 import {
   removeAccessToken,
@@ -27,6 +28,7 @@ const AppHeader = () => {
     dispatch(removeAccessToken());
     dispatch(removeConnectedUser());
     history.push("/login");
+    Alert.info("Vous êtes déconnectés.", 5000);
   };
 
   const tooltip = <Tooltip>Se déconnecter</Tooltip>;
@@ -89,7 +91,10 @@ const AppHeader = () => {
                     placement="right"
                     onClick={handleLogout}
                   >
-                    {getFirstNChars(`${connectedUser.lastname} ${connectedUser.firstname}`, 20)}
+                    {getFirstNChars(
+                      `${connectedUser.lastname} ${connectedUser.firstname}`,
+                      20
+                    )}
                   </IconButton>
                 </Whisper>
               </ButtonToolbar>

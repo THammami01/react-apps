@@ -14,6 +14,15 @@ router.get("/:employeeId", async (req, res) => {
   res.send({ leaves });
 });
 
+router.post("/", async (req, res) => {
+  const newLeave = new Leave(req.body);
+
+  newLeave.save((err, results) => {
+    if (err) res.sendStatus(500);
+    else res.send(results);
+  });
+});
+
 router.put("/", async (req, res) => {
   const { _id } = req.body;
   delete req.body._id;

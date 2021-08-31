@@ -23,7 +23,7 @@ const AlterEmloyeeModal = ({
     formValues.forEach((formValue) => {
       savedPerson[formValue.id] = formValue.value;
     });
-    
+
     return savedPerson;
   };
 

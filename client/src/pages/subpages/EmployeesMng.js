@@ -3,6 +3,7 @@ import { Alert, Button, Placeholder, Table } from "rsuite";
 import axios from "axios";
 
 import baseUrl from "../../utils/baseUrl";
+import { noFieldIsEmpty } from "../../utils/functions";
 import AlterEmployeeModal from "../../common/AlterEmployeeModal";
 import ConfirmationModal from "../../common/ConfirmationModal";
 
@@ -38,10 +39,6 @@ const EmployeesMng = () => {
     ],
     isShown: isAddModalShown,
     onClose: () => setIsAddModalShown(false),
-  };
-
-  const noFieldIsEmpty = (savedPerson) => {
-    return Object.values(savedPerson).every((value) => value !== "");
   };
 
   const updateModalContent = {
