@@ -37,10 +37,6 @@ const Dashboard = () => {
   useEffect(() => {
     if (!connectedUser) history.push("/login");
     else {
-      if (connectedUser.level === "Admin")
-        history.push("/management/employees");
-      else history.push("/management/view-leaves");
-
       setNavElements(
         connectedUser.level === "Admin"
           ? [
@@ -54,6 +50,10 @@ const Dashboard = () => {
             ]
           : [{ key: "view-leaves", text: "Congés Demandés", icon: "th-list" }]
       );
+      
+      if (connectedUser.level === "Admin")
+        history.push("/management/employees");
+      else history.push("/management/view-leaves");
     }
   }, [connectedUser]); // eslint-disable-line
 

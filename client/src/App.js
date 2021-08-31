@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { Container } from "rsuite";
+import { Alert, Container } from "rsuite";
 import {
   setAccessToken,
   setConnectedUser,
@@ -14,6 +14,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import "./App.scss";
+import axios from "axios";
+import baseUrl from "./utils/baseUrl";
 
 const App = () => {
   const history = useHistory();
@@ -27,16 +29,18 @@ const App = () => {
     if (!accessToken) {
       history.push("/login");
     } else {
-      dispatch(setAccessToken(accessToken));
-      dispatch(
-        setConnectedUser({
-          firstname: "Tarek",
-          lastname: "Hammami",
-          level: "Admin",
-          id: "0001",
+      axios
+        .get(`${baseUrl}/employees/verify-token`, {
+          headers: { Authorization: accessToken },
         })
-      );
-      history.push("/management/employees");
+        .then((res) => {
+          dispatch(setAccessToken(accessToken));
+          dispatch(setConnectedUser(res.data.employee));
+          history.push("/management/employees");
+        })
+        .catch((err) => {
+          Alert.error("Erreur lors de la connexion au serveur.");
+        });
     }
   }, []); // eslint-disable-line
 

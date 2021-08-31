@@ -86,7 +86,7 @@ const EmployeesMng = () => {
         }, 500);
       })
       .catch((err) => {
-        Alert.error("Erreur.");
+        Alert.error("Erreur lors de la connexion au serveur.");
       });
 
     return () => {
@@ -126,12 +126,12 @@ const EmployeesMng = () => {
       {users !== null ? (
         <Table autoHeight wordWrap height={400} data={users}>
           <Column width={200}>
-            <HeaderCell>Date Départ</HeaderCell>
+            <HeaderCell>Date départ</HeaderCell>
             <Cell dataKey="departureDate" />
           </Column>
 
           <Column width={200}>
-            <HeaderCell>Date Retour</HeaderCell>
+            <HeaderCell>Date retour</HeaderCell>
             <Cell dataKey="returnDate" />
           </Column>
 

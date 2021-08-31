@@ -15,4 +15,9 @@ router.get("/:employeeId", async (req, res) => {
   res.send({ leaves });
 });
 
+router.put("/", async (req, res) => {
+  console.log(res.body);
+  res.send({ status: "Received" });
+});
+
 module.exports = router;

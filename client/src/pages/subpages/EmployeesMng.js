@@ -81,7 +81,7 @@ const EmployeesMng = () => {
         }, 500);
       })
       .catch((err) => {
-        Alert.error("Erreur.");
+        Alert.error("Erreur lors de la connexion au serveur.");
       });
 
     return () => {
@@ -120,12 +120,7 @@ const EmployeesMng = () => {
       </Button>
 
       {users !== null ? (
-        <Table
-          autoHeight
-          wordWrap
-          height={400}
-          data={users}
-        >
+        <Table autoHeight wordWrap height={400} data={users}>
           <Column width={100} align="center" fixed>
             <HeaderCell>Id</HeaderCell>
             <Cell dataKey="id" />

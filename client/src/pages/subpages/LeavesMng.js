@@ -11,6 +11,7 @@ const LeavesMng = () => {
   const [leaves, setLeaves] = useState(null);
   const [isAcceptModalShown, setIsAcceptModalShown] = useState(false);
   const [isRefuseModalShown, setIsRefuseModalShown] = useState(false);
+  const [targetLeaveId, setTargetLeaveId] = useState(null);
 
   const acceptModalContent = {
     text: "Êtes-vous sûr de vouloir accepter cette demande ?",
@@ -19,7 +20,10 @@ const LeavesMng = () => {
         label: "Accepter",
         appearance: "primary",
         color: "green",
-        onClick: () => setIsAcceptModalShown(false),
+        onClick: () => {
+          acceptLeave(targetLeaveId);
+          setIsAcceptModalShown(false);
+        },
       },
       {
         label: "Annuler",
@@ -38,7 +42,10 @@ const LeavesMng = () => {
         label: "Réfuser",
         appearance: "primary",
         color: "red",
-        onClick: () => setIsRefuseModalShown(false),
+        onClick: () => {
+          refuseLeave(targetLeaveId);
+          setIsRefuseModalShown(false);
+        },
       },
       {
         label: "Annuler",
@@ -50,12 +57,44 @@ const LeavesMng = () => {
     onClose: () => setIsRefuseModalShown(false),
   };
 
-  const handleAction = (action) => {
+  const handleAction = (action, _id) => {
     if (action === "accept") {
       setIsAcceptModalShown(true);
     } else if (action === "refuse") {
       setIsRefuseModalShown(true);
     }
+
+    setTargetLeaveId(_id);
+  };
+
+  const acceptLeave = (targetId) => {
+    let leaveToUpdate;
+
+    setLeaves((leaves) =>
+      leaves.map((leave) => {
+        if (leave._id === targetId) {
+          leaveToUpdate = leave;
+          return { ...leave, status: "Acceptée" };
+        } else return leave;
+      })
+    );
+
+    axios
+      .put(`${baseUrl}/leaves`, leaveToUpdate)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        Alert.error("Erreur lors de la connexion au serveur.");
+      });
+  };
+
+  const refuseLeave = (targetId) => {
+    setLeaves((leaves) =>
+      leaves.map((leave) => {
+        return leave._id === targetId ? { ...leave, status: "Réfusée" } : leave;
+      })
+    );
   };
 
   useEffect(() => {
@@ -67,8 +106,8 @@ const LeavesMng = () => {
           setLeaves(res.data.leaves);
         }, 500);
       })
-      .catch(() => {
-        Alert.error("Erreur.");
+      .catch((err) => {
+        Alert.error("Erreur lors de la connexion au serveur.");
       });
 
     return () => {
@@ -81,14 +120,9 @@ const LeavesMng = () => {
       <h1 style={{ marginBottom: "2.5rem" }}>Gestion des Congés</h1>
 
       {leaves !== null ? (
-        <Table
-          autoHeight
-          wordWrap
-          height={400}
-          data={leaves}
-        >
+        <Table autoHeight wordWrap height={400} data={leaves}>
           <Column width={100} align="center" fixed>
-            <HeaderCell>Id Employé</HeaderCell>
+            <HeaderCell>Id employé</HeaderCell>
             <Cell dataKey="employeeId" />
           </Column>
 
@@ -108,12 +142,12 @@ const LeavesMng = () => {
           </Column>
 
           <Column width={200}>
-            <HeaderCell>Date Départ</HeaderCell>
+            <HeaderCell>Date départ</HeaderCell>
             <Cell dataKey="departureDate" />
           </Column>
 
           <Column width={200}>
-            <HeaderCell>Date Retour</HeaderCell>
+            <HeaderCell>Date retour</HeaderCell>
             <Cell dataKey="returnDate" />
           </Column>
 
@@ -130,12 +164,13 @@ const LeavesMng = () => {
             <HeaderCell>Action</HeaderCell>
 
             <Cell>
-              {({ status }) => {
+              {(leave) => {
+                const { _id, status } = leave;
                 return (
                   <span>
                     {status !== "Acceptée" && (
                       <a
-                        onClick={() => handleAction("accept")}
+                        onClick={() => handleAction("accept", _id)}
                         style={{ cursor: "pointer" }}
                       >
                         {" "}
@@ -147,7 +182,7 @@ const LeavesMng = () => {
 
                     {status !== "Réfusée" && (
                       <a
-                        onClick={() => handleAction("refuse")}
+                        onClick={() => handleAction("refuse", _id)}
                         style={{ cursor: "pointer" }}
                       >
                         {" "}
@@ -164,8 +199,8 @@ const LeavesMng = () => {
         <Placeholder.Grid rows={6} columns={4} active />
       )}
 
-      <ConfirmationModal {...acceptModalContent} />
-      <ConfirmationModal {...refuseModalContent} />
+      {isAcceptModalShown && <ConfirmationModal {...acceptModalContent} />}
+      {isRefuseModalShown && <ConfirmationModal {...refuseModalContent} />}
     </>
   );
 };
