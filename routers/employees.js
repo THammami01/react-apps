@@ -40,6 +40,27 @@ router.get("/", async (req, res) => {
   res.send({ employees });
 });
 
+router.post("/", async (req, res) => {
+  const newEmployee = new Employee(req.body);
+
+  newEmployee.save((err, results) => {
+    if (err) res.sendStatus(500);
+    else res.send(results);
+  });
+});
+
+router.put("/", async (req, res) => {
+  const { _id } = req.body;
+  delete req.body._id;
+
+  await Employee.findByIdAndUpdate(_id, req.body, (err, results) => {
+    if (err) {
+      console.log(err);
+      res.sendStatus(500);
+    } else res.send({ status: "Updated" });
+  });
+});
+
 router.put("/delete", async (req, res) => {
   const { _id } = req.body;
 

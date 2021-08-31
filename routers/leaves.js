@@ -16,7 +16,7 @@ router.get("/:employeeId", async (req, res) => {
 
 router.put("/", async (req, res) => {
   const { _id } = req.body;
-  delete req.body.id;
+  delete req.body._id;
 
   await Leave.findByIdAndUpdate(_id, req.body, (err, results) => {
     if (err) {

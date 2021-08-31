@@ -21,7 +21,14 @@ const EmployeesMng = () => {
       {
         label: "Ajouter",
         appearance: "primary",
-        onClick: () => setIsAddModalShown(false),
+        onClick: (savedPerson) => {
+          if (noFieldIsEmpty(savedPerson)) {
+            addPerson(savedPerson);
+            setIsAddModalShown(false);
+          } else {
+            Alert.info("Tous les champs doivent être remplis.", 5000);
+          }
+        },
       },
       {
         label: "Annuler",
@@ -33,13 +40,25 @@ const EmployeesMng = () => {
     onClose: () => setIsAddModalShown(false),
   };
 
+  const noFieldIsEmpty = (savedPerson) => {
+    return Object.values(savedPerson).every((value) => value !== "");
+  };
+
   const updateModalContent = {
     title: "Modification des details d'un employé",
     btns: [
       {
         label: "Modifier",
         appearance: "primary",
-        onClick: () => setIsUpdateModalShown(false),
+        onClick: (savedPerson) => {
+          savedPerson._id = personToUpdate._id;
+          if (noFieldIsEmpty(savedPerson)) {
+            updatePerson(savedPerson);
+            setIsUpdateModalShown(false);
+          } else {
+            Alert.info("Tous les champs doivent être remplis.", 5000);
+          }
+        },
       },
       {
         label: "Annuler",
@@ -74,6 +93,33 @@ const EmployeesMng = () => {
     onClose: () => setIsDeleteModalShown(false),
   };
 
+  const addPerson = (savedPerson) => {
+    axios
+      .post(`${baseUrl}/employees`, savedPerson)
+      .then((res) => {
+        Alert.success("Ajouté avec succès.", 5000);
+        setUsers((users) => [...users, res.data]);
+      })
+      .catch((err) => {
+        Alert.error("Erreur lors de la connexion au serveur.");
+      });
+  };
+
+  const updatePerson = (savedPerson) => {
+    setUsers((users) =>
+      users.map((user) => (user._id === savedPerson._id ? savedPerson : user))
+    );
+
+    axios
+      .put(`${baseUrl}/employees`, savedPerson)
+      .then((res) => {
+        Alert.success("Modifié avec succès.", 5000);
+      })
+      .catch((err) => {
+        Alert.error("Erreur lors de la connexion au serveur.");
+      });
+  };
+
   useEffect(() => {
     let timer;
     axios
@@ -98,7 +144,7 @@ const EmployeesMng = () => {
       axios
         .put(`${baseUrl}/employees/delete`, { _id: targetPerson })
         .then((res) => {
-          console.log(res);
+          Alert.info("Supprimé avec succès.", 5000);
         })
         .catch((err) => {
           Alert.error("Erreur lors de la connexion au serveur.");
@@ -128,7 +174,6 @@ const EmployeesMng = () => {
   return (
     <>
       <h1 style={{ marginBottom: "2.5rem" }}>Gestion des Employés</h1>
-      {/* <p>CONNECTED USER: {JSON.stringify(connectedUser)}</p> */}
 
       <Button
         size="lg"

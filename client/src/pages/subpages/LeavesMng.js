@@ -80,7 +80,7 @@ const LeavesMng = () => {
       axios
         .put(`${baseUrl}/leaves`, leaveToUpdate)
         .then((res) => {
-          console.log(res);
+          Alert.success("Status changé avec succès.", 5000);
         })
         .catch((err) => {
           Alert.error("Erreur lors de la connexion au serveur.");

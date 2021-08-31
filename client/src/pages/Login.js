@@ -47,6 +47,7 @@ const Login = () => {
           dispatch(setAccessToken(res.data.accessToken));
           localStorage.setItem("accessToken", res.data.accessToken);
           history.push("/management");
+          Alert.success("Vous êtes connectés.", 5000);
         } else {
           Alert.info("Identifiant et/ou mot de passe incorrects.", 5000);
         }

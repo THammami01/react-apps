@@ -79,8 +79,6 @@ const EmployeesMng = () => {
 
   useEffect(() => {
     let timer;
-    console.log("BR1");
-    console.log(connectedUser);
     axios
       .get(`${baseUrl}/leaves/${connectedUser.id}`)
       .then((res) => {
@@ -121,7 +119,7 @@ const EmployeesMng = () => {
       axios
         .put(`${baseUrl}/leaves/delete`, { _id: targetId })
         .then((res) => {
-          console.log(res);
+          Alert.info("Congé supprimé avec succès.", 5000);
         })
         .catch((err) => {
           Alert.error("Erreur lors de la connexion au serveur.");

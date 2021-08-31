@@ -18,6 +18,15 @@ const AlterEmloyeeModal = ({
     { id: "password", label: "Mot de passe", width: 300, value: "" },
   ]);
 
+  const getPerson = () => {
+    const savedPerson = {};
+    formValues.forEach((formValue) => {
+      savedPerson[formValue.id] = formValue.value;
+    });
+    
+    return savedPerson;
+  };
+
   useEffect(() => {
     if (personToUpdate)
       setFormValues((formValues) => {
@@ -69,7 +78,11 @@ const AlterEmloyeeModal = ({
       </Modal.Body>
       <Modal.Footer>
         {btns.map(({ label, appearance, onClick }, index) => (
-          <Button key={index} onClick={onClick} appearance={appearance}>
+          <Button
+            key={index}
+            onClick={() => onClick(getPerson())}
+            appearance={appearance}
+          >
             {label}
           </Button>
         ))}
